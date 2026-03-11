@@ -1,0 +1,16 @@
+[
+    {
+        "testtype": "Gherkin",
+        "fields": {
+            "summary": "Original",
+            "project": {
+                "key": "ABCD"
+            },
+            "priority": {
+                "name": "3 - Médio"
+            }
+        },
+        "gherkin_def": "Given a\nWhen b\nThen c",
+        "xray_test_repository_folder": "Squad/Feature"
+    }
+]

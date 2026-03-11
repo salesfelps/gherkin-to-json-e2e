@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    "types": ["node"],
+
+    "rootDir": ".",
+    "outDir": "dist",
+
+    "resolveJsonModule": true
+  },
+  "include": [
+    "tests/bdd/**/*.ts",
+    "playwright.config.js",
+    "cucumber.cjs"
+  ]
+}

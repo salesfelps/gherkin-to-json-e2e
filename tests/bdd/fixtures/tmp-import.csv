@@ -1,0 +1,7 @@
+﻿Test Type;Test Summary;Gherkin Definition;Test Repository Path;Description;Labels;Components;Categoria Label;Priority
+Gherkin;Cenário 1;"Given a
+When b
+Then c";Squad/Feature;;;;;3 - Médio
+Gherkin;Cenário 2;"Given a2
+When b2
+Then c2";Squad/Feature;;;;;3 - Médio

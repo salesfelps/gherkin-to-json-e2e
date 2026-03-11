@@ -1,0 +1,39 @@
+{
+  "name": "gherkin-to-json-e2e",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:bdd",
+    "test:bdd": "cucumber-js",
+    "test:bdd:smoke": "cucumber-js --tags @smoke",
+    "test:prod": "cross-env TEST_ENV=prod cucumber-js",
+    "test:local": "cross-env TEST_ENV=local cucumber-js",
+    "test:headed": "cross-env HEADLESS=0 cucumber-js",
+    "report:bdd": "node -e \"console.log('Relatórios gerados em: reports/cucumber.html e reports/cucumber.json')\"",
+    "pw:test": "playwright test",
+    "pw:test:ui": "playwright test --ui",
+    "pw:test:headed": "playwright test --headed",
+    "pw:report": "playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salesfelps/gherkin-to-json-e2e.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/salesfelps/gherkin-to-json-e2e/issues"
+  },
+  "homepage": "https://github.com/salesfelps/gherkin-to-json-e2e#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.6.0",
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.3",
+    "cross-env": "^10.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
