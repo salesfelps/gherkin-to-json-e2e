@@ -36,7 +36,7 @@ function resolveLocalPublicDir(): string {
   );
 
   // 2) Fallback: caminho legacy do README (máquinas onde o app está fora do repo E2E)
-  const legacy = path.resolve('C:/VS Code/gherkin-to-json-converter/public');
+  const legacy = path.resolve('C:/VSCode/gherkin-to-json-converter/public');
 
   const hasIndex = (dir: string) => existsSync(path.join(dir, 'index.html'));
 

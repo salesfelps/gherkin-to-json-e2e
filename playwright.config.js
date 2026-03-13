@@ -12,7 +12,7 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
-const baseURL = process.env.APP_BASE_URL ?? 'file:///C:/VS%20Code/gherkin-to-json-converter/public/';
+const baseURL = process.env.APP_BASE_URL ?? 'file:///C:/VSCode/Gherkin-to-json-converter/public';
 
 export default defineConfig({
   testDir: './tests',

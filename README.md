@@ -16,6 +16,7 @@ npm test                 # padrão (prod, headless)
 npm run test:local       # app local (file://)
 npm run test:prod        # produção
 npm run test:headed      # browser visível
+set TEST_ENV=local& set HEADLESS=0& npx cucumber-js #local com navegador aberto
 npm run test:bdd:smoke   # apenas @smoke
 ```
 

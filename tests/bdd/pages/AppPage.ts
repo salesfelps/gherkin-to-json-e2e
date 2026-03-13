@@ -6,10 +6,12 @@ export class AppPage {
   constructor(public readonly page: Page) {}
 
   async open(baseUrl: string): Promise<void> {
-    // Para prod: baseUrl termina com '/'
-    // Para local: baseUrl (file://...) também termina com '/'
-    // Em ambos, navegar para index.html funciona.
-    await this.page.goto(new URL('index.html', baseUrl).toString());
+    // Para local (file://), é necessário apontar para index.html explicitamente.
+    // Para prod (http/https), basta a URL base.
+    const url = baseUrl.startsWith('file://')
+      ? new URL('index.html', baseUrl).toString()
+      : baseUrl;
+    await this.page.goto(url);
 
     // Esperar o boot/reveal (persist restore + UI render)
     await this.page.waitForLoadState('domcontentloaded');
