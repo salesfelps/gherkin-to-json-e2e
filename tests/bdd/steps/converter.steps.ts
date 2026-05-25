@@ -31,14 +31,14 @@ When(
 
 When('eu clico em Converter', async function (this: CustomWorld) {
   const app = new AppPage(this.page!);
-  await app.generateJson();
+  await app.clickGenerate(); // Novo método que trata modal
 });
 
 Then('devo ver um JSON gerado', async function (this: CustomWorld) {
   const app = new AppPage(this.page!);
-  const output = await app.readJsonOutput();
+  const json = await app.getGeneratedJson(); // Novo método com timeout melhor
 
-  // Assert bem simples: não vazio e parece JSON.
-  expect(output.trim().length).toBeGreaterThan(1);
-  expect(output.trim().startsWith('{') || output.trim().startsWith('[')).toBeTruthy();
+  // Assert bem simples: não vazio e parece JSON válido
+  expect(json).toBeTruthy();
+  expect(typeof json === 'object').toBeTruthy();
 });

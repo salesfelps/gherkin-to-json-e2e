@@ -129,21 +129,8 @@ When('eu clico em Gerar JSON \\(com Dataset\\)', async function (this: CustomWor
 
 When('eu clico em Gerar JSON', async function (this: CustomWorld) {
   const app = new AppPage(this.page!);
-  await app.generateJson();
-
-  // Para cenários que não validam explicitamente o aviso, prosseguir quando houver dataset.
-  if (await app.page.locator('.simple-confirm-overlay:not(.hidden)').isVisible().catch(() => false)) {
-    await app.page
-      .locator('.simple-confirm-overlay:not(.hidden)')
-      .getByRole('button', { name: 'Continuar' })
-      .click();
-
-    // Aguarde output ser preenchido
-    await app.page.waitForFunction(() => {
-      const output = document.getElementById('output')?.textContent ?? '';
-      return output.trim().length > 0;
-    });
-  }
+  // Novo método que clica gerar e trata modal Dataset se aparecer
+  await app.clickGenerate();
 });
 
 Then('devo ver o erro {string}', async function (this: CustomWorld, msg: string) {
@@ -263,8 +250,11 @@ Then(
   'deve abrir um aviso de exportação por planilha informando que responsável não é suportado',
   async function (this: CustomWorld) {
     const app = new AppPage(this.page!);
+    // Usar novo método com timeout maior e polling
+    await app.waitForDatasetModal('o campo "Responsável" não é suportado', 10000);
+    
+    // Modal está visível, clicar "Continuar"
     const overlay = app.page.locator('.simple-confirm-overlay:not(.hidden)');
-    await expect(overlay).toContainText('o campo "Responsável" não é suportado');
     await overlay.getByRole('button', { name: 'Continuar' }).click();
 
     // Após continuar, o chip CSV deve aparecer

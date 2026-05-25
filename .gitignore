@@ -12,4 +12,5 @@ node_modules/
 /reports/
 
 # Fixtures temporários (gerados durante os testes)
-tests/bdd/fixtures/tmp-*
+tests/bdd/fixtures/tmp-import.json
+tests/bdd/fixtures/tmp-import.csv

@@ -87,7 +87,7 @@ export class AppPage {
   /**
    * Preenche campos obrigatórios para gerar JSON.
    */
-  async fillRequiredHeader(projectKey = 'ABCD', repositoryPath = 'Squad/Feature'): Promise<void> {
+  async fillRequiredHeader(projectKey = 'ABCDEF', repositoryPath = 'Squad/Feature'): Promise<void> {
     await this.fillHeaderProject(projectKey);
     await this.fillHeaderFolder(repositoryPath);
   }
@@ -524,5 +524,106 @@ export class AppPage {
 
   async setViewport(width: number, height: number): Promise<void> {
     await this.page.setViewportSize({ width, height });
+  }
+
+  /**
+   * Aguarda e clica "Continuar" no modal Dataset se aparecer.
+   * Timeout curto (3s) porque modal pode não aparecer em todos os cenários.
+   */
+  async handleDatasetModalIfVisible(): Promise<void> {
+    try {
+      const modal = AppLocators.simpleConfirmOverlay(this.page);
+      const isVisible = await modal.isVisible({ timeout: 3000 }).catch(() => false);
+
+      if (isVisible) {
+        console.log('✓ Modal Dataset detectado - clicando "Continuar"');
+        await AppLocators.simpleConfirmContinueButton(this.page).click();
+
+        // Aguardar modal desaparecer
+        await expect(modal).toBeHidden({ timeout: 5000 });
+        console.log('✓ Modal fechado');
+      }
+    } catch (e) {
+      // Modal não apareceu - isso é OK, cenário pode não ter database
+      console.log('ℹ Modal não apareceu (sem dataset ou timeout)');
+    }
+  }
+
+  /**
+   * Clica "Gerar JSON" e aguarda modal se necessário.
+   */
+  async clickGenerate(): Promise<void> {
+    await this.clickExportGenerateJson();
+
+    // Tratar modal se aparecer
+    await this.handleDatasetModalIfVisible();
+  }
+
+  /**
+   * Lê o output JSON com timeout maior para aguardar elemento ficar visível.
+   */
+  async readJsonOutputWithWait(): Promise<string> {
+    const output = AppLocators.jsonOutput(this.page);
+    await output.waitFor({ state: 'visible', timeout: 10000 });
+
+    const tag = await output.evaluate((el) => el.tagName.toLowerCase());
+    if (tag === 'textarea' || tag === 'input') {
+      return await output.inputValue();
+    }
+    return (await output.textContent()) ?? '';
+  }
+
+  /**
+   * Valida se JSON output é válido e retorna o objeto.
+   */
+  async getGeneratedJson(): Promise<any> {
+    const content = await this.readJsonOutputWithWait();
+    return JSON.parse(content);
+  }
+
+  /**
+   * Aguarda o modal Dataset ser renderizado com melhor timing usando polling.
+   */
+  async waitForDatasetModal(messageText: string, timeout: number = 10000): Promise<void> {
+    const startTime = Date.now();
+
+    return new Promise((resolve, reject) => {
+      const checkInterval = setInterval(async () => {
+        try {
+          const modal = AppLocators.simpleConfirmOverlay(this.page);
+          const isExist = await modal.count().catch(() => 0);
+
+          if (isExist > 0) {
+            const hasHidden = await modal
+              .evaluate((el) => el.classList.contains('hidden'))
+              .catch(() => true);
+
+            if (!hasHidden) {
+              // Modal visível - validar conteúdo
+              const msgElement = this.page.locator('.center-confirm-text');
+              const text = await msgElement.textContent().catch(() => '');
+
+              if (text && text.includes(messageText)) {
+                clearInterval(checkInterval);
+                resolve();
+                return;
+              }
+            }
+          }
+
+          // Verificar timeout
+          if (Date.now() - startTime > timeout) {
+            clearInterval(checkInterval);
+            reject(
+              new Error(
+                `Modal não apareceu com "${messageText}" em ${timeout}ms`
+              )
+            );
+          }
+        } catch (e) {
+          // Continua tentando
+        }
+      }, 200); // Verificar a cada 200ms
+    });
   }
 }
