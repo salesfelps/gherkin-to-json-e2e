@@ -33,7 +33,7 @@ Feature: Exportar JSON (validações, conteúdo, formatação e ordem)
     Then devo ver o erro "O campo \"Projeto\" é obrigatório."
 
   @regression @export-json
-  Scenario: Validar regra de 6 letras para o Projeto (topo)
+  Scenario: Validar regra de entre 4 e 6 letras para o Projeto (topo) - rejeição com 3 letras
     When eu preencho o projeto do cabeçalho com "ABC"
     And eu preencho o repositório do cabeçalho com "Squad/Feature"
     And eu preencho o título do cenário 1 com "Cenário"
@@ -44,7 +44,35 @@ Feature: Exportar JSON (validações, conteúdo, formatação e ordem)
       Then resultado
       """
     And eu clico em Gerar JSON
-    Then devo ver o erro "O campo \"Projeto\" deve conter 6 letras."
+    Then devo ver o erro "O campo \"Projeto\" deve conter entre 4 e 6 letras."
+
+  @regression @export-json
+  Scenario: Aceitar Projeto com 4 letras (topo)
+    When eu preencho o projeto do cabeçalho com "ABCD"
+    And eu preencho o repositório do cabeçalho com "Squad/Feature"
+    And eu preencho o título do cenário 1 com "Cenário"
+    And eu preencho o Gherkin do cenário 1 com:
+      """
+      Given algo
+      When acao
+      Then resultado
+      """
+    And eu clico em Gerar JSON
+    Then devo ver um JSON gerado com indentação de 4 espaços
+
+  @regression @export-json
+  Scenario: Aceitar Projeto com 5 letras (topo)
+    When eu preencho o projeto do cabeçalho com "ABCDE"
+    And eu preencho o repositório do cabeçalho com "Squad/Feature"
+    And eu preencho o título do cenário 1 com "Cenário"
+    And eu preencho o Gherkin do cenário 1 com:
+      """
+      Given algo
+      When acao
+      Then resultado
+      """
+    And eu clico em Gerar JSON
+    Then devo ver um JSON gerado com indentação de 4 espaços
 
   @regression @export-json
   Scenario: Validar obrigatoriedade do campo Repositório (topo)

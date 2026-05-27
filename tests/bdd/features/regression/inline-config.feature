@@ -19,7 +19,7 @@ Feature: Configuração inline (campos padrão vs variáveis por cenário)
     Then devo ver o erro "O campo \"Projeto\" do cenário #1 é obrigatório."
 
   @regression @inline-config
-  Scenario: Projeto variável por cenário valida regra de 6 letras por cenário
+  Scenario: Projeto variável por cenário valida regra de entre 4 e 6 letras - rejeição com 3 letras
     When eu defino o campo "project" do topo como variável por cenário
     And eu preencho o repositório do cabeçalho com "Squad/Feature"
     And eu preencho o título do cenário 1 com "Cenário"
@@ -31,7 +31,37 @@ Feature: Configuração inline (campos padrão vs variáveis por cenário)
       """
     And eu preencho o Projeto do cenário 1 com "ABC"
     And eu clico em Gerar JSON
-    Then devo ver o erro "O campo \"Projeto\" do cenário #1 deve conter 6 letras."
+    Then devo ver o erro "O campo \"Projeto\" do cenário #1 deve conter entre 4 e 6 letras."
+
+  @regression @inline-config
+  Scenario: Projeto variável por cenário aceita 4 letras
+    When eu defino o campo "project" do topo como variável por cenário
+    And eu preencho o repositório do cabeçalho com "Squad/Feature"
+    And eu preencho o título do cenário 1 com "Cenário"
+    And eu preencho o Gherkin do cenário 1 com:
+      """
+      Given a
+      When b
+      Then c
+      """
+    And eu preencho o Projeto do cenário 1 com "ABCD"
+    And eu clico em Gerar JSON
+    Then devo ver um JSON gerado com indentação de 4 espaços
+
+  @regression @inline-config
+  Scenario: Projeto variável por cenário aceita 5 letras
+    When eu defino o campo "project" do topo como variável por cenário
+    And eu preencho o repositório do cabeçalho com "Squad/Feature"
+    And eu preencho o título do cenário 1 com "Cenário"
+    And eu preencho o Gherkin do cenário 1 com:
+      """
+      Given a
+      When b
+      Then c
+      """
+    And eu preencho o Projeto do cenário 1 com "ABCDE"
+    And eu clico em Gerar JSON
+    Then devo ver um JSON gerado com indentação de 4 espaços
 
   @regression @inline-config
   Scenario: Repositório variável por cenário valida presença de "/" por cenário
